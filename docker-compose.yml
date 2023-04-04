@@ -1,10 +1,14 @@
 version: '3'
+
 services:
   flagserver:
-    container_name: 'flagserver'
+    container_name: ${CONTAINER_NAME:-flagserver}
     build: .
     ports:
-      - "9999:9999"
+      - "${EXTERNAL_PORT:-9999}:9999"
     restart: unless-stopped
     init: true
     read_only: true
+    volumes:
+      - ${FLAG_FILE_PATH:-./flag.txt}:/home/user/flag.txt:ro
+
