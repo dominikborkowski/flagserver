@@ -1,5 +1,6 @@
 FROM golang:1.20-alpine as builder
 LABEL org.opencontainers.image.authors="dominik.borkowski@gmail.com"
+LABEL org.opencontainers.image.source="https://github.com/dominikborkowski/flagserver"
 
 # compile flagserver code
 WORKDIR /app
