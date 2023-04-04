@@ -29,5 +29,5 @@ jobs:
       - name: "Build Docker Image"
         run: |
           docker build . --tag ghcr.io/dominikborkowski/flagserver:latest
-          docker run ghcr.io/dominikborkowski/flagserver:latest
+          # docker run ghcr.io/dominikborkowski/flagserver:latest
           docker push ghcr.io/dominikborkowski/flagserver:latest
