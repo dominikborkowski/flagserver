@@ -1,0 +1,10 @@
+version: '3'
+services:
+  flagserver:
+    container_name: 'flagserver'
+    build: .
+    ports:
+      - "9999:9999"
+    restart: unless-stopped
+    init: true
+    read_only: true
