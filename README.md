@@ -23,10 +23,16 @@ Options can be provided either via command line arguments, or environment variab
 These options can be stored in `.env` for use with `docker-compose`
 
 ```
+# name of the container
 CONTAINER_NAME=flagserver
-FLAG_EXTERNAL_FILEPATH=./flag.txt # path on the docker host system for the flag file
-FLAG_SERVER_FILEPATH=~/flag.txt # this is location of the flag file inside the container
+# path on the docker host system for the flag file
+FLAG_EXTERNAL_FILEPATH=./flag.txt
+# this is location of the flag file inside the container
+FLAG_SERVER_FILEPATH=/home/user/flag.txt
+# address to listen to
 FLAG_SERVER_HOST=0.0.0.0
+# port to listen on
 FLAG_SERVER_PORT=9999
+# set to true to UDP isntead of default TCP
 FLAG_SERVER_UDP=false
 ```

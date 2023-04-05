@@ -13,7 +13,7 @@ services:
       - ${FLAG_EXTERNAL_FILEPATH:-./flag.txt}:${FLAG_SERVER_FILEPATH:-/home/user/flag.txt}:ro
     environment:
       - FLAG_SERVER_PORT=${FLAG_SERVER_PORT:-9999}
-      - FLAG_SERVER_FILEPATH=${FLAG_SERVER_FILEPATH:/home/user/flag.txt}
+      - FLAG_SERVER_FILEPATH=${FLAG_SERVER_FILEPATH:-/home/user/flag.txt}
       - FLAG_SERVER_HOST=${FLAG_SERVER_HOST:-0.0.0.0}
       - FLAG_SERVER_UDP=${FLAG_SERVER_UDP:-false}
 
