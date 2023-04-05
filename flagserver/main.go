@@ -7,23 +7,46 @@ import (
 	"log"
 	"net"
 	"os"
+	"strconv"
 )
 
 var (
-	host     = flag.String("h", "localhost", "Host")
-	port     = flag.Int("p", 0, "Port")
-	filepath = flag.String("f", "~/flag.txt", "filepath")
-	udp      = flag.Bool("u", false, "use UDP instead of TCP")
+	filepath = flag.String("f", "~/flag.txt", "Filepath (can also be set via FLAG_SERVER_FILEPATH environment variable)")
+	host     = flag.String("h", "localhost", "Host (can also be set via FLAG_SERVER_HOST environment variable)")
+	port     = flag.Int("p", 0, "Port number (can also be set via FLAG_SERVER_PORT environment variable (default to random)")
+	udp      = flag.Bool("u", false, "Use UDP instead of TCP (can also be set via FLAG_SERVER_UDP environment variable (default to \"false\")")
 )
 
 func main() {
 	flag.Parse()
-	log.Printf("Starting new file server instance")
 
-	log.Printf("File %s is %d bytes", *filepath, getFileSize(*filepath))
+	// read environment variables
+	if envHost := os.Getenv("FLAG_SERVER_HOST"); envHost != "" {
+		host = &envHost
+	}
+	if envPort := os.Getenv("FLAG_SERVER_PORT"); envPort != "" {
+		if portVal, err := strconv.Atoi(envPort); err == nil {
+			port = &portVal
+		}
+	}
+	if envFilepath := os.Getenv("FLAG_SERVER_FILEPATH"); envFilepath != "" {
+		filepath = &envFilepath
+	}
+	if envUdp := os.Getenv("FLAG_SERVER_UDP"); envUdp != "" {
+		if udpVal, err := strconv.ParseBool(envUdp); err == nil {
+			udp = &udpVal
+		}
+	}
+
+	log.Printf("Starting new flag server instance")
+	log.Printf("Host: %s", *host)
+	log.Printf("Port: %d", *port)
+	log.Printf("Filepath: %s", *filepath)
+	log.Printf("Use UDP: %t", *udp)
+	log.Printf("Flag file %s is %d bytes", *filepath, getFileSize(*filepath))
 
 	content := readFileIntoBuffer(*filepath)
-	log.Printf("File content is:")
+	log.Printf("Flag is:")
 	fmt.Println(string(content))
 
 	if *udp {
@@ -50,6 +73,7 @@ func readFileIntoBuffer(filename string) []byte {
 	fileContent, err := os.ReadFile(filename)
 	if err != nil {
 		log.Printf("Error opening file: %s", err.Error())
+        os.Exit(1)
 		return empty
 	}
 	if err == io.EOF {
