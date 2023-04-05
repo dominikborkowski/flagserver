@@ -1,8 +1,9 @@
 
 
-# flag server
+# flagserver
 
-This is a simple program for serving plain text content over TCP connection, often used during CTF challenges. Flag file can be either built-in, or mounted as a volume during run time.
+This is a simple Go program for serving plain text content over TCP, or UDP, connection, often used during CTF challenges. Options can be supplied either via command line arguments or environment variables. Can be used as a stand-alone program, or via supplied docker images.
+
 
 ## Defaults
 
