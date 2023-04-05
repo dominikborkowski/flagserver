@@ -12,7 +12,7 @@ import (
 
 var (
 	filepath = flag.String("f", "~/flag.txt", "Filepath (can also be set via FLAG_SERVER_FILEPATH environment variable)")
-	host     = flag.String("h", "localhost", "Host (can also be set via FLAG_SERVER_HOST environment variable)")
+	host     = flag.String("h", "0.0.0.0", "Host (can also be set via FLAG_SERVER_HOST environment variable)")
 	port     = flag.Int("p", 0, "Port number (can also be set via FLAG_SERVER_PORT environment variable (default to random)")
 	udp      = flag.Bool("u", false, "Use UDP instead of TCP (can also be set via FLAG_SERVER_UDP environment variable (default to \"false\")")
 )
