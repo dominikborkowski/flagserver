@@ -11,4 +11,9 @@ services:
     read_only: true
     volumes:
       - ${FLAG_FILE_PATH:-./flag.txt}:/home/user/flag.txt:ro
+    environment:
+      - FLAG_SERVER_PORT=${EXTERNAL_PORT:-9999}
+      - FLAG_SERVER_FILEPATH=${FLAG_SERVER_FILEPATH:-~/flag.txt}
+      - FLAG_SERVER_HOST=${FLAG_SERVER_HOST:-0.0.0.0}
+      - FLAG_SERVER_UDP=${FLAG_SERVER_UDP:-false}
 

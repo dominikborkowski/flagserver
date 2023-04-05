@@ -22,4 +22,5 @@ COPY ./flag.txt $HOME/flag.txt
 USER $USER
 WORKDIR $HOME
 
+# ENTRYPOINT ["/usr/local/bin/flagserver","-h", "0.0.0.0","-p", "9999", "-f", "/home/user/flag.txt"]
 ENTRYPOINT ["/usr/local/bin/flagserver","-h", "0.0.0.0","-p", "9999", "-f", "/home/user/flag.txt"]
