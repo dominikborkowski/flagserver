@@ -11,6 +11,7 @@ import (
 )
 
 var (
+	content  = flag.String("c", "", "Content (can also be set via FLAG_SERVER_CONTENT environment variable)")
 	filepath = flag.String("f", "~/flag.txt", "Filepath (can also be set via FLAG_SERVER_FILEPATH environment variable)")
 	host     = flag.String("h", "0.0.0.0", "Host (can also be set via FLAG_SERVER_HOST environment variable)")
 	port     = flag.Int("p", 0, "Port number (can also be set via FLAG_SERVER_PORT environment variable (default to random)")
@@ -43,16 +44,29 @@ func main() {
 	log.Printf("Port: %d", *port)
 	log.Printf("Filepath: %s", *filepath)
 	log.Printf("Use UDP: %t", *udp)
-	log.Printf("Flag file %s is %d bytes", *filepath, getFileSize(*filepath))
 
-	content := readFileIntoBuffer(*filepath)
-	log.Printf("Flag is:")
-	fmt.Println(string(content))
 
+	// identify flag content,
+	var buffer []byte
+    if *content != "" {
+		buffer = []byte(*content)
+		log.Printf("Using content from command line:  %s", *content)
+	} else if envContent := os.Getenv("FLAG_SERVER_CONTENT"); envContent != "" {
+		buffer = []byte(envContent)
+		log.Printf("Using content from FLAG_SERVER_CONTENT env var:  %s", envContent)
+	} else if *filepath != "" {
+		log.Printf("Flag file %s is %d bytes", *filepath, getFileSize(*filepath))
+		buffer = readFileIntoBuffer(*filepath)
+        log.Printf("Actual flag is:")
+        fmt.Println(string(buffer))
+	}
+
+
+    // serve
 	if *udp {
-		serveContentViaUdp(content)
+		serveContentViaUdp(buffer)
 	} else {
-		serveContentViaTcp(content)
+		serveContentViaTcp(buffer)
 	}
 }
 
@@ -73,7 +87,7 @@ func readFileIntoBuffer(filename string) []byte {
 	fileContent, err := os.ReadFile(filename)
 	if err != nil {
 		log.Printf("Error opening file: %s", err.Error())
-        os.Exit(1)
+		os.Exit(1)
 		return empty
 	}
 	if err == io.EOF {
@@ -141,4 +155,9 @@ func serveContentViaUdp(content []byte) {
 			log.Printf("Finished serving content over UDP")
 		}
 	}
+}
+
+// serve content via HTTP
+func serveContentViaHTTP(content []byte) {
+
 }
