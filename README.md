@@ -9,8 +9,9 @@ By default `flagserver` will listen on port `9999` on `0.0.0.0`, and wil serve c
 
 ## Options
 
-Options can be provided either via command line arguments, or environment variables. Currently environment variables take precedence over CLI arguments (yes, it's backwards)
+Options can be provided either via command line arguments, or environment variables. Currently environment variables take precedence over CLI arguments (except for the content. And yes, it's backwards)
 
+* `-c` or `FLAG_SERVER_CONTENT` - optional way to provide text flag via command line or an environment variable
 * `-f` or `FLAG_SERVER_FILEPATH` - path to a file containing text flag. Defaults to `~/flag.txt`
 * `-h` or `FLAG_SERVER_HOST` - host/IP used for listening to new traffic. Defaults to `0.0.0.0` (all traffic)
 * `-p` or `FLAG_SERVER_PORT` - port to listen on. Defaults to a random port
@@ -34,4 +35,22 @@ FLAG_SERVER_HOST=0.0.0.0
 FLAG_SERVER_PORT=9999
 # set to true to UDP isntead of default TCP
 FLAG_SERVER_UDP=false
+
+# instead of specifying paths for flags, one can use specify content via
+FLAG_SERVER_CONTENT=supersecretword
+```
+
+## Example test run
+
+```
+$ cd main
+$ go build && ./flagserver -c "foobar" -p 9999
+
+2023/04/19 12:12:16 Starting new flag server instance
+2023/04/19 12:12:16 Host: 0.0.0.0
+2023/04/19 12:12:16 Port: 9999
+2023/04/19 12:12:16 Filepath: ~/flag.txt
+2023/04/19 12:12:16 Use UDP: false
+2023/04/19 12:12:16 Using content from command line: foobar
+2023/04/19 12:12:16 Listening for TCP connections on [::]:9999
 ```
