@@ -50,10 +50,10 @@ func main() {
 	var buffer []byte
     if *content != "" {
 		buffer = []byte(*content)
-		log.Printf("Using content from command line:  %s", *content)
+		log.Printf("Using content from command line: %s", *content)
 	} else if envContent := os.Getenv("FLAG_SERVER_CONTENT"); envContent != "" {
 		buffer = []byte(envContent)
-		log.Printf("Using content from FLAG_SERVER_CONTENT env var:  %s", envContent)
+		log.Printf("Using content from FLAG_SERVER_CONTENT env var: %s", envContent)
 	} else if *filepath != "" {
 		log.Printf("Flag file %s is %d bytes", *filepath, getFileSize(*filepath))
 		buffer = readFileIntoBuffer(*filepath)

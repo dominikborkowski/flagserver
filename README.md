@@ -1,5 +1,3 @@
-
-
 # flagserver
 
 This is a simple Go program for serving plain text content over TCP, or UDP, connection, often used during CTF challenges. Options can be supplied either via command line arguments or environment variables. Can be used as a stand-alone program, or via supplied docker images.
