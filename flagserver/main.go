@@ -52,7 +52,7 @@ func main() {
 	log.Printf("File path: %s", *file_path)
 	log.Printf("Protocol: %s", *protocol)
 
-	// identify flag content,
+	// identify flag content
 	var buffer []byte
 	if *content != "" {
 		buffer = []byte(*content)
@@ -67,7 +67,7 @@ func main() {
 		fmt.Println(string(buffer))
 	}
 
-	// use appropriate protocol
+	// serve via the selected protocol
 	switch *protocol {
 	case "http":
         log.Printf("HTTP path: %s", *http_path)
