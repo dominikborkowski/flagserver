@@ -13,7 +13,7 @@ import (
 
 var (
 	content   = flag.String("content", "", "Content (can also be set via FLAG_SERVER_CONTENT environment variable)")
-	filepath  = flag.String("filepath", "~/flag.txt", "Filepath (can also be set via FLAG_SERVER_FILEPATH environment variable)")
+	file_path  = flag.String("file_path", "~/flag.txt", "File_path (can also be set via FLAG_SERVER_FILE_PATH environment variable)")
 	host      = flag.String("host", "0.0.0.0", "Host (can also be set via FLAG_SERVER_HOST environment variable)")
 	port      = flag.Int("port", 0, "Port number (can also be set via FLAG_SERVER_PORT environment variable, defaults to random)")
 	protocol  = flag.String("protocol", "tcp", "Specify what protocol to use, permitted values are tcp, udp, and http. (can also be set via FLAG_SERVER_PROTOCOL environment variable, defaults to \"tcp\")")
@@ -34,8 +34,8 @@ func main() {
 		}
 	}
 
-	if envFilepath := os.Getenv("FLAG_SERVER_FILEPATH"); envFilepath != "" {
-		filepath = &envFilepath
+	if envFile_path := os.Getenv("FLAG_SERVER_FILE_PATH"); envFile_path != "" {
+		file_path = &envFile_path
 	}
 
     if envHttpPath := os.Getenv("FLAG_SERVER_HTTP_PATH"); envHttpPath != "" {
@@ -49,7 +49,7 @@ func main() {
 	log.Printf("Starting new flag server instance")
 	log.Printf("Host: %s", *host)
 	log.Printf("Port: %d", *port)
-	log.Printf("Filepath: %s", *filepath)
+	log.Printf("File path: %s", *file_path)
 	log.Printf("Protocol: %s", *protocol)
 
 	// identify flag content,
@@ -60,9 +60,9 @@ func main() {
 	} else if envContent := os.Getenv("FLAG_SERVER_CONTENT"); envContent != "" {
 		buffer = []byte(envContent)
 		log.Printf("Using content from FLAG_SERVER_CONTENT env var: %s", envContent)
-	} else if *filepath != "" {
-		log.Printf("Flag file %s is %d bytes", *filepath, getFileSize(*filepath))
-		buffer = readFileIntoBuffer(*filepath)
+	} else if *file_path != "" {
+		log.Printf("Flag file %s is %d bytes", *file_path, getFileSize(*file_path))
+		buffer = readFileIntoBuffer(*file_path)
 		log.Printf("Actual flag is:")
 		fmt.Println(string(buffer))
 	}
