@@ -15,7 +15,7 @@ Options can be provided either via command line arguments, or environment variab
 * `-f` or `FLAG_SERVER_FILEPATH` - path to a file containing text flag. Defaults to `~/flag.txt`
 * `-h` or `FLAG_SERVER_HOST` - host/IP used for listening to new traffic. Defaults to `0.0.0.0` (all traffic)
 * `-p` or `FLAG_SERVER_PORT` - port to listen on. Defaults to a random port
-* `-u` or `FLAG_SERVER_UDP` - use UDP instead of TCP. Defaults to `false`
+* `--protocol` or `FLAG_SERVER_PROTOCOL` - use `tcp`, `udp`, or `http`. Defaults to `tcp`
 
 
 ## Sample `.env` options
@@ -33,8 +33,8 @@ FLAG_SERVER_FILEPATH=/home/user/flag.txt
 FLAG_SERVER_HOST=0.0.0.0
 # port to listen on
 FLAG_SERVER_PORT=9999
-# set to true to UDP isntead of default TCP
-FLAG_SERVER_UDP=false
+# specify which protocol to use: TCP (default), UDP, or HTTP
+FLAG_SERVER_PROTOCOL=http
 
 # instead of specifying paths for flags, one can use specify content via
 FLAG_SERVER_CONTENT=supersecretword
@@ -44,13 +44,11 @@ FLAG_SERVER_CONTENT=supersecretword
 
 ```
 $ cd main
-$ go build && ./flagserver -c "foobar" -p 9999
-
-2023/04/19 12:12:16 Starting new flag server instance
-2023/04/19 12:12:16 Host: 0.0.0.0
-2023/04/19 12:12:16 Port: 9999
-2023/04/19 12:12:16 Filepath: ~/flag.txt
-2023/04/19 12:12:16 Use UDP: false
-2023/04/19 12:12:16 Using content from command line: foobar
-2023/04/19 12:12:16 Listening for TCP connections on [::]:9999
+$ go build && ./flagserver -c "foobar" -p 9999 --protocol http
+2023/04/21 22:23:40 Starting new flag server instance
+2023/04/21 22:23:40 Host: 0.0.0.0
+2023/04/21 22:23:40 Port: 9999
+2023/04/21 22:23:40 Filepath: ~/flag.txt
+2023/04/21 22:23:40 Protocol: http
+2023/04/21 22:23:40 Using content from command line: foobar
 ```

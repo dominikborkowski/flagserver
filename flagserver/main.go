@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"strconv"
 )
@@ -14,8 +15,9 @@ var (
 	content  = flag.String("c", "", "Content (can also be set via FLAG_SERVER_CONTENT environment variable)")
 	filepath = flag.String("f", "~/flag.txt", "Filepath (can also be set via FLAG_SERVER_FILEPATH environment variable)")
 	host     = flag.String("h", "0.0.0.0", "Host (can also be set via FLAG_SERVER_HOST environment variable)")
-	port     = flag.Int("p", 0, "Port number (can also be set via FLAG_SERVER_PORT environment variable (default to random)")
-	udp      = flag.Bool("u", false, "Use UDP instead of TCP (can also be set via FLAG_SERVER_UDP environment variable (default to \"false\")")
+	port     = flag.Int("p", 0, "Port number (can also be set via FLAG_SERVER_PORT environment variable, defaults to random)")
+	protocol = flag.String("protocol", "tcp", "Specify what protocol to use, permitted values are tcp, udp, and http. (can also be set via FLAG_SERVER_PROTOCOL environment variable, defaults to \"tcp\")")
+
 )
 
 func main() {
@@ -25,25 +27,26 @@ func main() {
 	if envHost := os.Getenv("FLAG_SERVER_HOST"); envHost != "" {
 		host = &envHost
 	}
+
 	if envPort := os.Getenv("FLAG_SERVER_PORT"); envPort != "" {
 		if portVal, err := strconv.Atoi(envPort); err == nil {
 			port = &portVal
 		}
 	}
+
 	if envFilepath := os.Getenv("FLAG_SERVER_FILEPATH"); envFilepath != "" {
 		filepath = &envFilepath
 	}
-	if envUdp := os.Getenv("FLAG_SERVER_UDP"); envUdp != "" {
-		if udpVal, err := strconv.ParseBool(envUdp); err == nil {
-			udp = &udpVal
-		}
+
+	if envProtocol := os.Getenv("FLAG_SERVER_PROTOCOL"); envProtocol  != "" {
+        protocol = &envProtocol
 	}
 
 	log.Printf("Starting new flag server instance")
 	log.Printf("Host: %s", *host)
 	log.Printf("Port: %d", *port)
 	log.Printf("Filepath: %s", *filepath)
-	log.Printf("Use UDP: %t", *udp)
+	log.Printf("Protocol: %s", *protocol)
 
 
 	// identify flag content,
@@ -62,12 +65,18 @@ func main() {
 	}
 
 
-    // serve
-	if *udp {
-		serveContentViaUdp(buffer)
-	} else {
-		serveContentViaTcp(buffer)
-	}
+    // use appropriate protocol
+    switch *protocol {
+        case "http":
+            serveContentViaHTTP(buffer, *port)
+        case "tcp":
+            serveContentViaTcp(buffer)
+        case "udp":
+            serveContentViaUdp(buffer)
+        default:
+            log.Printf("ERROR, unknown protocol: %s", *protocol)
+    }
+
 }
 
 // get the file size
@@ -158,6 +167,16 @@ func serveContentViaUdp(content []byte) {
 }
 
 // serve content via HTTP
-func serveContentViaHTTP(content []byte) {
+func serveContentViaHTTP(content []byte, port int) {
+
+    // add an extra newline
+    content = append(content, '\n')
+
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        w.Write(content)
+    })
+
+    // create a listener on the specified port
+    log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), nil))
 
 }
