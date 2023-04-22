@@ -12,10 +12,10 @@ import (
 )
 
 var (
-	content  = flag.String("c", "", "Content (can also be set via FLAG_SERVER_CONTENT environment variable)")
-	filepath = flag.String("f", "~/flag.txt", "Filepath (can also be set via FLAG_SERVER_FILEPATH environment variable)")
-	host     = flag.String("h", "0.0.0.0", "Host (can also be set via FLAG_SERVER_HOST environment variable)")
-	port     = flag.Int("p", 0, "Port number (can also be set via FLAG_SERVER_PORT environment variable, defaults to random)")
+	content  = flag.String("content", "", "Content (can also be set via FLAG_SERVER_CONTENT environment variable)")
+	filepath = flag.String("filepath", "~/flag.txt", "Filepath (can also be set via FLAG_SERVER_FILEPATH environment variable)")
+	host     = flag.String("host", "0.0.0.0", "Host (can also be set via FLAG_SERVER_HOST environment variable)")
+	port     = flag.Int("port", 0, "Port number (can also be set via FLAG_SERVER_PORT environment variable, defaults to random)")
 	protocol = flag.String("protocol", "tcp", "Specify what protocol to use, permitted values are tcp, udp, and http. (can also be set via FLAG_SERVER_PROTOCOL environment variable, defaults to \"tcp\")")
 
 )

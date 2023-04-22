@@ -11,10 +11,10 @@ By default `flagserver` will listen on port `9999` on `0.0.0.0`, and wil serve c
 
 Options can be provided either via command line arguments, or environment variables. Currently environment variables take precedence over CLI arguments (except for the content. And yes, it's backwards)
 
-* `-c` or `FLAG_SERVER_CONTENT` - optional way to provide text flag via command line or an environment variable
-* `-f` or `FLAG_SERVER_FILEPATH` - path to a file containing text flag. Defaults to `~/flag.txt`
-* `-h` or `FLAG_SERVER_HOST` - host/IP used for listening to new traffic. Defaults to `0.0.0.0` (all traffic)
-* `-p` or `FLAG_SERVER_PORT` - port to listen on. Defaults to a random port
+* `--content` or `FLAG_SERVER_CONTENT` - optional way to provide text flag via command line or an environment variable
+* `--filepath` or `FLAG_SERVER_FILEPATH` - path to a file containing text flag. Defaults to `~/flag.txt`
+* `--host` or `FLAG_SERVER_HOST` - host/IP used for listening to new traffic. Defaults to `0.0.0.0` (all traffic)
+* `--port` or `FLAG_SERVER_PORT` - port to listen on. Defaults to a random port
 * `--protocol` or `FLAG_SERVER_PROTOCOL` - use `tcp`, `udp`, or `http`. Defaults to `tcp`
 
 
@@ -44,7 +44,7 @@ FLAG_SERVER_CONTENT=supersecretword
 
 ```
 $ cd main
-$ go build && ./flagserver -c "foobar" -p 9999 --protocol http
+$ go build && ./flagserver --content "foobar" --port 9999 --protocol http
 2023/04/21 22:23:40 Starting new flag server instance
 2023/04/21 22:23:40 Host: 0.0.0.0
 2023/04/21 22:23:40 Port: 9999
