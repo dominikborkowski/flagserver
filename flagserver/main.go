@@ -12,12 +12,12 @@ import (
 )
 
 var (
-	content  = flag.String("content", "", "Content (can also be set via FLAG_SERVER_CONTENT environment variable)")
-	filepath = flag.String("filepath", "~/flag.txt", "Filepath (can also be set via FLAG_SERVER_FILEPATH environment variable)")
-	host     = flag.String("host", "0.0.0.0", "Host (can also be set via FLAG_SERVER_HOST environment variable)")
-	port     = flag.Int("port", 0, "Port number (can also be set via FLAG_SERVER_PORT environment variable, defaults to random)")
-	protocol = flag.String("protocol", "tcp", "Specify what protocol to use, permitted values are tcp, udp, and http. (can also be set via FLAG_SERVER_PROTOCOL environment variable, defaults to \"tcp\")")
-
+	content   = flag.String("content", "", "Content (can also be set via FLAG_SERVER_CONTENT environment variable)")
+	filepath  = flag.String("filepath", "~/flag.txt", "Filepath (can also be set via FLAG_SERVER_FILEPATH environment variable)")
+	host      = flag.String("host", "0.0.0.0", "Host (can also be set via FLAG_SERVER_HOST environment variable)")
+	port      = flag.Int("port", 0, "Port number (can also be set via FLAG_SERVER_PORT environment variable, defaults to random)")
+	protocol  = flag.String("protocol", "tcp", "Specify what protocol to use, permitted values are tcp, udp, and http. (can also be set via FLAG_SERVER_PROTOCOL environment variable, defaults to \"tcp\")")
+	http_path = flag.String("http-path", "/", "HTTP path (can also be set via FLAG_SERVER_HTTP_PATH environment variable, defaults to \"/f\")")
 )
 
 func main() {
@@ -38,8 +38,12 @@ func main() {
 		filepath = &envFilepath
 	}
 
-	if envProtocol := os.Getenv("FLAG_SERVER_PROTOCOL"); envProtocol  != "" {
-        protocol = &envProtocol
+    if envHttpPath := os.Getenv("FLAG_SERVER_HTTP_PATH"); envHttpPath != "" {
+        http_path = &envHttpPath
+	}
+
+	if envProtocol := os.Getenv("FLAG_SERVER_PROTOCOL"); envProtocol != "" {
+		protocol = &envProtocol
 	}
 
 	log.Printf("Starting new flag server instance")
@@ -48,10 +52,9 @@ func main() {
 	log.Printf("Filepath: %s", *filepath)
 	log.Printf("Protocol: %s", *protocol)
 
-
 	// identify flag content,
 	var buffer []byte
-    if *content != "" {
+	if *content != "" {
 		buffer = []byte(*content)
 		log.Printf("Using content from command line: %s", *content)
 	} else if envContent := os.Getenv("FLAG_SERVER_CONTENT"); envContent != "" {
@@ -60,22 +63,22 @@ func main() {
 	} else if *filepath != "" {
 		log.Printf("Flag file %s is %d bytes", *filepath, getFileSize(*filepath))
 		buffer = readFileIntoBuffer(*filepath)
-        log.Printf("Actual flag is:")
-        fmt.Println(string(buffer))
+		log.Printf("Actual flag is:")
+		fmt.Println(string(buffer))
 	}
 
-
-    // use appropriate protocol
-    switch *protocol {
-        case "http":
-            serveContentViaHTTP(buffer, *port)
-        case "tcp":
-            serveContentViaTcp(buffer)
-        case "udp":
-            serveContentViaUdp(buffer)
-        default:
-            log.Printf("ERROR, unknown protocol: %s", *protocol)
-    }
+	// use appropriate protocol
+	switch *protocol {
+	case "http":
+        log.Printf("HTTP path: %s", *http_path)
+		serveContentViaHTTP(buffer, *port, *http_path)
+	case "tcp":
+		serveContentViaTcp(buffer)
+	case "udp":
+		serveContentViaUdp(buffer)
+	default:
+		log.Printf("ERROR, unknown protocol: %s", *protocol)
+	}
 
 }
 
@@ -167,16 +170,16 @@ func serveContentViaUdp(content []byte) {
 }
 
 // serve content via HTTP
-func serveContentViaHTTP(content []byte, port int) {
+func serveContentViaHTTP(content []byte, port int, http_path string) {
 
-    // add an extra newline
-    content = append(content, '\n')
+	// add an extra newline
+	content = append(content, '\n')
 
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        w.Write(content)
-    })
+	http.HandleFunc(http_path, func(w http.ResponseWriter, r *http.Request) {
+		w.Write(content)
+	})
 
-    // create a listener on the specified port
-    log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), nil))
+	// create a listener on the specified port
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), nil))
 
 }

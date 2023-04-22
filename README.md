@@ -16,6 +16,7 @@ Options can be provided either via command line arguments, or environment variab
 * `--host` or `FLAG_SERVER_HOST` - host/IP used for listening to new traffic. Defaults to `0.0.0.0` (all traffic)
 * `--port` or `FLAG_SERVER_PORT` - port to listen on. Defaults to a random port
 * `--protocol` or `FLAG_SERVER_PROTOCOL` - use `tcp`, `udp`, or `http`. Defaults to `tcp`
+* `--http-path` or `FLAG_SERVER_HTTP_PATH` - specify what HTTP path to listen on. Used only for `http` protocol, defaults to `/`
 
 
 ## Sample `.env` options
@@ -35,6 +36,8 @@ FLAG_SERVER_HOST=0.0.0.0
 FLAG_SERVER_PORT=9999
 # specify which protocol to use: TCP (default), UDP, or HTTP
 FLAG_SERVER_PROTOCOL=http
+# specify what path should HTTP requests reply to, defaults to /
+FLAG_SERVER_HTTP_PATH=/content
 
 # instead of specifying paths for flags, one can use specify content via
 FLAG_SERVER_CONTENT=supersecretword
